@@ -1,0 +1,169 @@
+mysql> CREATE DATABASE company;
+Query OK, 1 row affected (0.17 sec)
+
+mysql> USE company;
+Database changed
+mysql> CREATE TABLE MY_EMPLOYEE(ID INT(4) PRIMARY KEY AUTO_INCREMENT, LAST_NAME VARCHAR(25), FIRST_NAME VARCHAR(25), USERID VARCHAR(8), SALARY FLOAT(9,2));
+Query OK, 0 rows affected, 2 warnings (0.14 sec)
+
+mysql> INSERT INTO MY_EMPLOYEE(1, 'Patel','Ralph','rpatel',795);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '1, 'Patel','Ralph','rpatel',795)' at line 1
+mysql> 
+mysql> USE MY_EMPLOYEE
+ERROR 1049 (42000): Unknown database 'my_employee'
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| doctor             |
+| height             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| pubs               |
+| sys                |
++--------------------+
+8 rows in set (0.14 sec)
+
+mysql> USE company;
+Database changed
+mysql> INSERT INTO MY_EMPLOYEE VALUES(1,'Patel','Ralph','rpatel',795);
+Query OK, 1 row affected (0.29 sec)
+
+mysql> INSERT INTO MY_EMPLOYEE (ID,LAST_NAME,FIRST_NAME,USERID,SALARY)
+    -> VALUES(2,'Dancs','Betty','bdancs',860);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from MY_EMPLOYEE;
++----+-----------+------------+--------+--------+
+| ID | LAST_NAME | FIRST_NAME | USERID | SALARY |
++----+-----------+------------+--------+--------+
+|  1 | Patel     | Ralph      | rpatel | 795.00 |
+|  2 | Dancs     | Betty      | bdancs | 860.00 |
++----+-----------+------------+--------+--------+
+2 rows in set (0.06 sec)
+
+mysql> \. C:\Users\sql\loadme.sql
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT* FROM MY_EMPLOYEE;
++----+-----------+------------+----------+---------+
+| ID | LAST_NAME | FIRST_NAME | USERID   | SALARY  |
++----+-----------+------------+----------+---------+
+|  1 | PATEL     | RALPH      | RPATEL   |  795.00 |
+|  2 | DANC      | BETTY      | BDANC    |  860.00 |
+|  3 | BIRI      | BEN        | BBIRI    | 1100.00 |
+|  4 | NEWMAN    | CHAD       | CNEWMAN  |  750.00 |
+|  5 | ROPEBURN  | AUDRY      | AROPEBUR | 1550.00 |
++----+-----------+------------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE MY_EMPLOYEE
+    -> SET LAST_NAME = 'Drexler'
+    -> WHERE ID =3
+    -> \c
+mysql> UPDATE MY_EMPLOYEE
+    -> SET LAST_NAME = 'Drexler'
+    -> WHERE ID =3;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE MY_EMPLOYEE
+    -> SET salary=1000
+    -> WHERE salary<900;
+Query OK, 3 rows affected (0.05 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from MY_EMPLOYEE;
++----+-----------+------------+----------+---------+
+| ID | LAST_NAME | FIRST_NAME | USERID   | SALARY  |
++----+-----------+------------+----------+---------+
+|  1 | Patel     | Ralph      | rpatel   | 1000.00 |
+|  2 | Dancs     | Betty      | bdancs   | 1000.00 |
+|  3 | Drexler   | Ben        | bbiri    | 1100.00 |
+|  4 | Newman    | Chad       | cnewman  | 1000.00 |
+|  5 | Ropeburn  | Audry      | aropebur | 1550.00 |
++----+-----------+------------+----------+---------+
+5 rows in set (0.05 sec)
+
+mysql> SELECT last_name,salary
+    -> FROM MY_EMPLOYEE;
++-----------+---------+
+| last_name | salary  |
++-----------+---------+
+| Patel     | 1000.00 |
+| Dancs     | 1000.00 |
+| Drexler   | 1100.00 |
+| Newman    | 1000.00 |
+| Ropeburn  | 1550.00 |
++-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> DELETE
+    -> FROM MY_EMPLOYEE
+    -> WHERE last_name ='Dancs';
+Query OK, 1 row affected (0.05 sec)
+
+mysql> SELECT * FROM MY_EMPLOYEE;
++----+-----------+------------+----------+---------+
+| ID | LAST_NAME | FIRST_NAME | USERID   | SALARY  |
++----+-----------+------------+----------+---------+
+|  1 | Patel     | Ralph      | rpatel   | 1000.00 |
+|  3 | Drexler   | Ben        | bbiri    | 1100.00 |
+|  4 | Newman    | Chad       | cnewman  | 1000.00 |
+|  5 | Ropeburn  | Audry      | aropebur | 1550.00 |
++----+-----------+------------+----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+mysql> \. C:\Users\sql\loadme.sql
+ERROR 1062 (23000): Duplicate entry '3' for key 'PRIMARY'
+ERROR 1062 (23000): Duplicate entry '4' for key 'PRIMARY'
+ERROR 1062 (23000): Duplicate entry '5' for key 'PRIMARY'
+
+Query OK, 1 row affected (0.00 sec)
+mysql> 
+mysql> select * from my_employee;
++----+-----------+------------+----------+---------+
+| ID | LAST_NAME | FIRST_NAME | USERID   | SALARY  |
++----+-----------+------------+----------+---------+
+|  1 | PATEL     | RALPH      | RPATEL   | 1000.00 |
+|  2 | DANC      | BETTY      | BDANC    | 1000.00 |
+|  3 | BIRI      | DEXTER     | BBIRI    | 1100.00 |
+|  4 | NEWMAN    | CHAD       | CNEWMAN  | 1000.00 |
+|  5 | ROPEBURN  | AUDRY      | AROPEBUR | 1550.00 |
+|  6 | Shaikh    | shoaib     | mShaikh | 4100.00 |
++----+-----------+------------+----------+---------+
+6 rows in set (0.00 sec)
+
+mysql> SAVEPOINT MYSAVPOINT1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELETE FROM MY_EMPLOYEE;
+Query OK, 6 rows affected (0.00 sec)
+
+mysql> ROLLBACK TO SAVEPOINT MYSAVPOINT1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM MY_EMPLOYEE;
++----+-----------+------------+----------+---------+
+| ID | LAST_NAME | FIRST_NAME | USERID   | SALARY  |
++----+-----------+------------+----------+---------+
+|  1 | PATEL     | RALPH      | RPATEL   | 1000.00 |
+|  2 | DANC      | BETTY      | BDANC    | 1000.00 |
+|  3 | BIRI      | DEXTER     | BBIRI    | 1100.00 |
+|  4 | NEWMAN    | CHAD       | CNEWMAN  | 1000.00 |
+|  5 | ROPEBURN  | AUDRY      | AROPEBUR | 1550.00 |
+|  6 | Shaikh    | shoaib     | mShoaib  | 4100.00 |
++----+-----------+------------+----------+---------+
+6 rows in set (0.00 sec)
+

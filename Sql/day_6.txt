@@ -1,0 +1,386 @@
+mysql> USE pubs;
+Database changed
+mysql> \t
+mysql> USE PUBS;
+Database changed
+mysql> SELECT pub_name 'Publisher', title
+    -> FROM publishers,titles
+    -> WHERE publishers.pub_id=titles.pub_id;
++----------------------+-----------------------------------------------------------------+
+| Publisher            | title                                                           |
++----------------------+-----------------------------------------------------------------+
+| Algodata Infosystems | The Busy Executive's Database Guide                             |
+| Algodata Infosystems | Cooking with Computers: Surreptitious Balance Sheets            |
+| New Moon Books       | You Can Combat Computer Stress!                                 |
+| Algodata Infosystems | Straight Talk About Computers                                   |
+| Binnet & Hardley     | Silicon Valley Gastronomic Treats                               |
+| Binnet & Hardley     | The Gourmet Microwave                                           |
+| Algodata Infosystems | But Is It User Friendly?                                        |
+| Algodata Infosystems | Secrets of Silicon Valley                                       |
+| Algodata Infosystems | Net Etiquette                                                   |
+| Binnet & Hardley     | Computer Phobic AND Non-Phobic Individuals: Behavior Variations |
+| New Moon Books       | Is Anger the Enemy?                                             |
+| New Moon Books       | Life Without Fear                                               |
+| New Moon Books       | Prolonged Data Deprivation: Four Case Studies                   |
+| New Moon Books       | Emotional Security: A New Algorithm                             |
+| Binnet & Hardley     | Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean |
+| Binnet & Hardley     | Fifty Years in Buckingham Palace Kitchens                       |
+| Binnet & Hardley     | Sushi, Anyone?                                                  |
++----------------------+-----------------------------------------------------------------+
+17 rows in set (0.02 sec)
+
+mysql>  SELECT pub_name,SUM(ytd_sales)
+    ->     -> FROM titles,publishers
+    ->     -> WHERE titles.pub_id=publishers.pub_id,
+    ->     -> GROUP BY titles.pub_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id,
+    -> G' at line 2
+mysql> \c
+mysql>  SELECT pub_name,SUM(ytd_sales)
+    -> FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id,
+    -> GROUP BY titles.pub_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',
+GROUP BY titles.pub_id' at line 3
+mysql> SELECT pub_name,SUM(ytd_sales)
+    -> FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id
+    -> GROUP BY titles.pub_id;
++----------------------+----------------+
+| pub_name             | SUM(ytd_sales) |
++----------------------+----------------+
+| Algodata Infosystems |          24941 |
+| New Moon Books       |          28286 |
+| Binnet & Hardley     |          44219 |
++----------------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT pub_name,au_lname,count(authors.city)
+    -> FROM publishers,authors
+    -> WHERE authors.city=publishers.city;
++----------------------+----------+---------------------+
+| pub_name             | au_lname | count(authors.city) |
++----------------------+----------+---------------------+
+| Algodata Infosystems | Carson   |                   2 |
++----------------------+----------+---------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT pub_name,au_lname,authors.city
+    ->  FROM publishers,authors
+    ->  WHERE authors.city=publishers.city
+    ->  GROUP BY authors.city;
++----------------------+----------+----------+
+| pub_name             | au_lname | city     |
++----------------------+----------+----------+
+| Algodata Infosystems | Carson   | Berkeley |
++----------------------+----------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DISTINCT pub_name, titles.pub_id
+    ->     -> FROM titles,publishers
+    ->     -> WHERE titles.pub_id=publishers.pub_id AND type='business';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id AND type='bu' at line 2
+mysql> SELECT DISTINCT pub_name, titles.pub_id
+    -> FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id AND type='business';
++----------------------+--------+
+| pub_name             | pub_id |
++----------------------+--------+
+| Algodata Infosystems | 1389   |
+| New Moon Books       | 0736   |
++----------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT title,au_fname
+    -> FROM titles,titleauthor,authors
+    -> WHERE titleauthor.au_id=authors.au_id AND titleauthor.title_id=titles.title_id;
++-----------------------------------------------------------------+----------+
+| title                                                           | au_fname |
++-----------------------------------------------------------------+----------+
+| The Busy Executive's Database Guide                             | Abraham  |
+| Emotional Security: A New Algorithm                             | Charlene |
+| Net Etiquette                                                   | Charlene |
+| Silicon Valley Gastronomic Treats                               | Innes    |
+| Net Etiquette                                                   | Johnson  |
+| The Busy Executive's Database Guide                             | Marjorie |
+| But Is It User Friendly?                                        | Cheryl   |
+| You Can Combat Computer Stress!                                 | Marjorie |
+| Is Anger the Enemy?                                             | Albert   |
+| Is Anger the Enemy?                                             | Anne     |
+| Life Without Fear                                               | Albert   |
+| The Gourmet Microwave                                           | Michel   |
+| The Gourmet Microwave                                           | Anne     |
+| Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | Sylvia   |
+| Straight Talk About Computers                                   | Dean     |
+| Secrets of Silicon Valley                                       | Ann      |
+| Secrets of Silicon Valley                                       | Sheryl   |
+| Computer Phobic AND Non-Phobic Individuals: Behavior Variations | Livia    |
+| Computer Phobic AND Non-Phobic Individuals: Behavior Variations | Stearns  |
+| Cooking with Computers: Surreptitious Balance Sheets            | Stearns  |
+| Cooking with Computers: Surreptitious Balance Sheets            | Michael  |
+| Sushi, Anyone?                                                  | Akiko    |
+| Sushi, Anyone?                                                  | Michael  |
+| Sushi, Anyone?                                                  | Burt     |
+| Fifty Years in Buckingham Palace Kitchens                       | Reginald |
++-----------------------------------------------------------------+----------+
+25 rows in set (0.01 sec)
+
+mysql> SELECT E.ename,E.emp_id, E.bsal, S.gardeD
+    -> FROM employees E
+    -> JOIN salgrades S
+    -> ON E.bsal BETWEEN S.min_sal AND max_sal;
+ERROR 1054 (42S22): Unknown column 'S.gardeD' in 'field list'
+mysql> SELECT E.ename,E.emp_id, E.bsal, S.garde
+    -> FROM employees E
+    -> JOIN salgrades S
+    -> ON E.bsal BETWEEN S.min_sal AND max_sal;
+ERROR 1054 (42S22): Unknown column 'S.garde' in 'field list'
+mysql> SELECT E.ename,E.emp_id, E.bsal, S.grade
+    -> FROM employees E
+    -> JOIN salgrades S
+    -> ON E.bsal BETWEEN S.min_sal AND max_sal;
++----------+--------+-------+-------+
+| ename    | emp_id | bsal  | grade |
++----------+--------+-------+-------+
+| Srinivas | 102    | 40000 | B     |
+| Nanda    | 103    | 40000 | B     |
+| Ram      | 104    | 35000 | B     |
+| Vivek    | 105    | 30000 | C     |
+| Venkat   | 106    | 25000 | C     |
++----------+--------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT E.ename,E.emp_id, E.bsal, S.grade
+    -> FROM employees E
+    -> JOIN salgrades S
+    -> ON E.bsal BETWEEN S.min_sal AND S.max_sal;
++----------+--------+-------+-------+
+| ename    | emp_id | bsal  | grade |
++----------+--------+-------+-------+
+| Srinivas | 102    | 40000 | B     |
+| Nanda    | 103    | 40000 | B     |
+| Ram      | 104    | 35000 | B     |
+| Vivek    | 105    | 30000 | C     |
+| Venkat   | 106    | 25000 | C     |
++----------+--------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * employees;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees' at line 1
+mysql> select * from employees;
++--------+----------+---------+-----------+--------+--------+
+| emp_id | ename    | dept_id | job       | mgr_id | bsal   |
++--------+----------+---------+-----------+--------+--------+
+| 102    | Srinivas | 10      | VP        | 101    |  40000 |
+| 103    | Nanda    | 20      | VP        | 101    |  40000 |
+| 104    | Ram      | 30      | DGM       | 102    |  35000 |
+| 105    | Vivek    | 20      | PM        | 103    |  30000 |
+| 106    | Venkat   | 20      | Tech Lead | 105    |  25000 |
+| 101    | Sameer   | 10      | President | NULL   | 500000 |
++--------+----------+---------+-----------+--------+--------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE employees
+    -> SET bsal = 50000
+    -> WHERE emp_id=101;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT E.ename,E.emp_id, E.bsal, S.grade
+    -> FROM employees E
+    -> JOIN salgrades S
+    -> ON E.bsal BETWEEN S.min_sal AND S.max_sal;
++----------+--------+-------+-------+
+| ename    | emp_id | bsal  | grade |
++----------+--------+-------+-------+
+| Srinivas | 102    | 40000 | B     |
+| Nanda    | 103    | 40000 | B     |
+| Ram      | 104    | 35000 | B     |
+| Vivek    | 105    | 30000 | C     |
+| Venkat   | 106    | 25000 | C     |
+| Sameer   | 101    | 50000 | A     |
++----------+--------+-------+-------+
+6 rows in set (0.00 sec)
+
+mysql>  SELECT DISTINCT pub_name, titles.pub_id, type
+    -> FROM titles,publishers
+    ->  WHERE titles.pub_id=publishers.pub_id AND type!='business';
++----------------------+--------+--------------+
+| pub_name             | pub_id | type         |
++----------------------+--------+--------------+
+| Binnet & Hardley     | 0877   | mod_cook     |
+| Algodata Infosystems | 1389   | popular_comp |
+| Binnet & Hardley     | 0877   | psychology   |
+| New Moon Books       | 0736   | psychology   |
+| Binnet & Hardley     | 0877   | trad_cook    |
++----------------------+--------+--------------+
+5 rows in set (0.07 sec)
+
+mysql>  SELECT DISTINCT pub_name, titles.pub_id, type
+    -> FROM titles,publishers
+    ->  WHERE titles.pub_id=publishers.pub_id AND type!='mod_cook';
++----------------------+--------+--------------+
+| pub_name             | pub_id | type         |
++----------------------+--------+--------------+
+| Algodata Infosystems | 1389   | business     |
+| New Moon Books       | 0736   | business     |
+| Algodata Infosystems | 1389   | popular_comp |
+| Binnet & Hardley     | 0877   | psychology   |
+| New Moon Books       | 0736   | psychology   |
+| Binnet & Hardley     | 0877   | trad_cook    |
++----------------------+--------+--------------+
+6 rows in set (0.00 sec)
+
+mysql>  SELECT pub_name, titles.pub_id
+    -> FROM titles,publishers
+    -> WHERE titles.pub_id=publishers.pub_id AND type='business';
++----------------------+--------+
+| pub_name             | pub_id |
++----------------------+--------+
+| Algodata Infosystems | 1389   |
+| Algodata Infosystems | 1389   |
+| New Moon Books       | 0736   |
+| Algodata Infosystems | 1389   |
++----------------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM publishers WHERE city='Paris';
++--------+--------------------+-------+-------+---------+
+| pub_id | pub_name           | city  | state | country |
++--------+--------------------+-------+-------+---------+
+| 9999   | Lucerne Publishing | Paris | NULL  | France  |
++--------+--------------------+-------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT title,type,advance
+    -> FROM titles
+    -> WHERE advance>(SELECT AVG(advance) FROM titles WHERE type='business')
+    -> \c
+mysql> SELECT title,type,advance
+    -> FROM titles
+    -> WHERE advance>(SELECT AVG(advance) FROM titles WHERE type='business');
++-----------------------------------------------------------------+--------------+------------+
+| title                                                           | type         | advance    |
++-----------------------------------------------------------------+--------------+------------+
+| You Can Combat Computer Stress!                                 | business     | 10125.0000 |
+| The Gourmet Microwave                                           | mod_cook     | 15000.0000 |
+| But Is It User Friendly?                                        | popular_comp |  7000.0000 |
+| Secrets of Silicon Valley                                       | popular_comp |  8000.0000 |
+| Computer Phobic AND Non-Phobic Individuals: Behavior Variations | psychology   |  7000.0000 |
+| Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | trad_cook    |  7000.0000 |
+| Sushi, Anyone?                                                  | trad_cook    |  8000.0000 |
++-----------------------------------------------------------------+--------------+------------+
+7 rows in set (0.03 sec)
+
+mysql> SELECT au_fname,title,authors.au_id
+    -> FROM authors,titles,titleauthor
+    -> WHERE titles.title_id=titleauthor.title_id AND titleauthor.au_id=authors.au_id AND titles.title_id='PC9999';
++----------+---------------+-------------+
+| au_fname | title         | au_id       |
++----------+---------------+-------------+
+| Charlene | Net Etiquette | 486-29-1786 |
+| Johnson  | Net Etiquette | 172-32-1176 |
++----------+---------------+-------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT au_fname,type,authors.au_id
+    -> FROM authors,titles,titleauthor
+    -> WHERE titles.title_id=titleauthor.title_id AND titleauthor.au_id=authors.au_id AND titles.type='business';
++----------+----------+-------------+
+| au_fname | type     | au_id       |
++----------+----------+-------------+
+| Abraham  | business | 409-56-7008 |
+| Marjorie | business | 213-46-8915 |
+| Stearns  | business | 724-80-9391 |
+| Michael  | business | 267-41-2394 |
+| Marjorie | business | 213-46-8915 |
+| Dean     | business | 274-80-9391 |
++----------+----------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT title_id, title ,price 
+    -> FROM titles
+    -> WHERE price> pub_id='0736';
+Empty set (0.00 sec)
+
+
+mysql> SELECT title_id, title ,price 
+    -> FROM titles
+    -> WHERE price>(SELECT MAX(price) FROM titles WHERE pub_id='0736');
++----------+-----------------------------------------------------------------+---------+
+| title_id | title                                                           | price   |
++----------+-----------------------------------------------------------------+---------+
+| PC1035   | But Is It User Friendly?                                        | 22.9500 |
+| PC8888   | Secrets of Silicon Valley                                       | 20.0000 |
+| PS1372   | Computer Phobic AND Non-Phobic Individuals: Behavior Variations | 21.5900 |
+| TC3218   | Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | 20.9500 |
++----------+-----------------------------------------------------------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT title_id, title ,price 
+    -> FROM titles
+    -> WHERE price>(SELECT MAX(price) FROM titles WHERE pub_id='1389');
+Empty set (0.00 sec)
+
+mysql> SELECT title_id, title ,price 
+    -> FROM titles
+    -> WHERE price>(SELECT MAX(price) FROM titles WHERE pub_id='0736');
++----------+-----------------------------------------------------------------+---------+
+| title_id | title                                                           | price   |
++----------+-----------------------------------------------------------------+---------+
+| PC1035   | But Is It User Friendly?                                        | 22.9500 |
+| PC8888   | Secrets of Silicon Valley                                       | 20.0000 |
+| PS1372   | Computer Phobic AND Non-Phobic Individuals: Behavior Variations | 21.5900 |
+| TC3218   | Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | 20.9500 |
++----------+-----------------------------------------------------------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT title_id, title ,price 
+    -> FROM titles
+    -> WHERE price>(SELECT MAX(price) FROM titles WHERE pub_id='9999');
+Empty set (0.00 sec)
+
+mysql> SELECT title_id,title,type,Avg(ytd_sales)
+    -> FROM titles
+    -> WHERE title_id='BU1032'
+    -> GROUP BY type
+    -> \c
+mysql> SELECT title_id,title,type,Avg(ytd_sales)
+    -> FROM titles
+    -> WHERE title_id='BU1032'
+    -> GROUP BY type;
++----------+-------------------------------------+----------+----------------+
+| title_id | title                               | type     | Avg(ytd_sales) |
++----------+-------------------------------------+----------+----------------+
+| BU1032   | The Busy Executive's Database Guide | business |      4095.0000 |
++----------+-------------------------------------+----------+----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT title_id,title,type,Avg(ytd_sales)
+    -> FROM titles
+    -> WHERE title_id='PS2091'
+    -> GROUP BY type;
++----------+---------------------+------------+----------------+
+| title_id | title               | type       | Avg(ytd_sales) |
++----------+---------------------+------------+----------------+
+| PS2091   | Is Anger the Enemy? | psychology |      2045.0000 |
++----------+---------------------+------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT pub_name,au_fname,city
+    -> FROM authors,publishers
+    -> WHERE authors.city=publishers.city;
+ERROR 1052 (23000): Column 'city' in field list is ambiguous
+mysql> SELECT pub_name,au_fname,authors.city
+    -> FROM authors,publishers
+    -> WHERE authors.city=publishers.city;
++----------------------+----------+----------+
+| pub_name             | au_fname | city     |
++----------------------+----------+----------+
+| Algodata Infosystems | Cheryl   | Berkeley |
+| Algodata Infosystems | Abraham  | Berkeley |
++----------------------+----------+----------+
+2 rows in set (0.00 sec)
+

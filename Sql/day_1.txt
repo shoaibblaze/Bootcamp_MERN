@@ -1,0 +1,567 @@
+mysql> create database height;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use height;
+Database changed
+mysql> CREATE TABLE authors 
+    -> (
+    -> au_id varchar(11) NOT NULL UNIQUE,
+    -> au_lname varchar(40) NOT NULL,
+    -> au_fname varchar(20) NOT NULL,
+    -> phone char(12) NOT NULL DEFAULT 'Unknown',
+    -> address varchar(40),
+    -> city varchar(20),
+    -> state char(2),
+    -> zip char(5),
+    -> contract tinyint NOT NULL,
+    -> CONSTRAINT author_pk PRIMARY KEY (au_id));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show table;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> show tables;
++------------------+
+| Tables_in_height |
++------------------+
+| authors          |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> \c
+mysql> CREATE TABLE publishers 
+    -> (
+    -> pub_id char(4) NOT NULL UNIQUE,
+    -> pub_name varchar(40) NULL,
+    -> city varchar(20) NULL,
+    -> state char(2) NULL,
+    -> country varchar(30) NULL,
+    -> CONSTRAINT publisher_pk PRIMARY KEY (pub_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_height |
++------------------+
+| authors          |
+| publishers       |
++------------------+
+2 rows in set (0.00 sec)
+
+mysql> \t
+mysql> CREATE DATABASE PUBS;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE PUBS;
+Database changed
+mysql> CREATE TABLE authors 
+    -> (
+    -> au_id varchar(11) NOT NULL UNIQUE,
+    -> au_lname varchar(40) NOT NULL,
+    -> au_fname varchar(20) NOT NULL,
+    -> phone char(12) NOT NULL DEFAULT 'Unknown',
+    -> address varchar(40),
+    -> city varchar(20),
+    -> state char(2),
+    -> zip char(5),
+    -> contract tinyint NOT NULL,
+    -> CONSTRAINT author_pk PRIMARY KEY (au_id));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> ALTER TABLE Persons
+    -> \c
+mysql> ALTER TABLE PUBS
+    -> ALTER phone SET DEFAULT 'Unknown';
+ERROR 1146 (42S02): Table 'pubs.pubs' doesn't exist
+mysql> ALTER TABLE authors
+    -> ALTER phone SET DEFAULT 'Unknown';
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> showw tables;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'showw tables' at line 1
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE TABLE publishers 
+    -> (
+    -> pub_id char(4) NOT NULL UNIQUE,
+    -> pub_name varchar(40) NULL,
+    -> city varchar(20) NULL,
+    -> state char(2) NULL,
+    -> country varchar(30) NULL,
+    -> CONSTRAINT publisher_pk PRIMARY KEY (pub_id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>  ALTER TABLE publishers
+    -> ALTER country SET DEFAULT 'USA';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| publishers     |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE titles(title_id varchar(10), title varchar(80) NOT NULL, type char(12) NOT NULL, pub_id char(4) NULL, price decimal(10,4) NULL, advance decimal(10,4) NULL, royalty int NULL, ytd_sales int NULL, notes text NULL, pubdate date NULL, CONSTRAINT title_pk PRIMARY KEY (title_id), CONSTRAINT title_fk FOREIGN KEY(pub_id) REFERENCES publishers(pub_id) );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| publishers     |
+| titles         |
++----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from publishers;
+Empty set (0.00 sec)
+
+mysql> CREATE TABLE titleauthor;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> CREATE TABLE titleauthor
+    -> Terminal close -- exit!
+mysql> use pubs;
+Database changed
+mysql> showw tables;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'showw tables' at line 1
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| publishers     |
+| titles         |
++----------------+
+3 rows in set (0.07 sec)
+
+mysql> CREATE TABLE titleauthor(au_id varchar(4), title_id varchar(10), au_ord tinyint NULL, royaltyper int NULL,  CONSTRAINT titleauthor1_fk FOREIGN KEY(au_id) REFERENCES authors(au_id)),  CONSTRAINT titleauthor2_fk FOREIGN KEY(title_id) REFERENCES titles(title_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',  CONSTRAINT titleauthor2_fk FOREIGN KEY(title_id) REFERENCES titles(title_id))' at line 1
+mysql> CREATE TABLE titleauthor(au_id varchar(4), title_id varchar(10), au_ord tinyint NULL, royaltyper int NULL,  CONSTRAINT titleauthor1_fk FOREIGN KEY(au_id) REFERENCES authors(au_id),  CONSTRAINT titleauthor2_fk FOREIGN KEY(title_id) REFERENCES titles(title_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| publishers     |
+| titleauthor    |
+| titles         |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO table_name
+    -> \c
+mysql> INSERT INTO publishers
+    -> VALUES(0736,New Moon Books, boston, MA);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Moon Books, boston, MA)' at line 2
+mysql> INSERT INTO publishers
+    -> VALUES('0736','New Moon Books', 'boston', 'MA');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO publishers
+    -> VALUES('0736','New Moon Books','boston','MA');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| publishers     |
+| titleauthor    |
+| titles         |
++----------------+
+4 rows in set (0.02 sec)
+
+mysql> SELECT * FROM publishers;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0736','New Moon Books','boston','MA');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM publishers;
++--------+----------------+--------+-------+---------+
+| pub_id | pub_name       | city   | state | country |
++--------+----------------+--------+-------+---------+
+| 0736   | New Moon Books | boston | MA    | USA     |
++--------+----------------+--------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0877','Binnet & Hardley','Washington','DC'),
+    -> VALUES('1389','Algodata Infosystems',Berkeley','CA'),
+    '> VALUES('1389','Algodata Infosystems','Berkeley','CA'),
+    '> /c
+    '> \c
+    '> \c
+    '> /c
+    '> \c
+    '> VALUES('1389','Algodata Infosystems',Berkeley','CA');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('1389','Algodata Infosystems',Berkeley','CA'),
+VALUES('1389','Algodata In' at line 3
+mysql> SELECT * FROM publishers;
++--------+----------------+--------+-------+---------+
+| pub_id | pub_name       | city   | state | country |
++--------+----------------+--------+-------+---------+
+| 0736   | New Moon Books | boston | MA    | USA     |
++--------+----------------+--------+-------+---------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0877','Binnet & Hardley','Washington','DC'),
+    -> VALUES('1389','Algodata Infosystems',Berkeley','CA'),
+    '> VALUES('1389','Algodata Infosystems','Berkeley','CA');
+    '> VALUES('1389','Algodata Infosystems','Berkeley','CA');
+    '> \c
+    '> VALUES('1389','Algodata Infosystems',Berkeley','CA');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('1389','Algodata Infosystems',Berkeley','CA'),
+VALUES('1389','Algodata In' at line 3
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0877','Binnet & Hardley','Washington','DC'),
+    -> VALUES('1389','Algodata Infosystems','Berkeley','CA'),
+    -> VALUES('9952','Scootney Books','New York','NY'),
+    -> VALUES('1622','Five Lakes Publishing','Chicago','IL'),
+    -> VALUES('1762','Ramona Publishers','Dallas','TX'),
+    -> VALUES('9901','GGG&G','MGnchen'),
+    -> VALUES('9999','Lucerne Publishing','Paris');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('1389','Algodata Infosystems','Berkeley','CA'),
+VALUES('9952','Scootney B' at line 3
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0877','Binnet & Hardley','Washington','DC'),('1389','Algodata Infosystems','Berkeley','CA'),('9952','Scootney Books','New York','NY'),('1622','Five Lakes Publishing','Chicago','IL'),('1756','Ramona Publishers','Dallas','TX'),('9901','GGG&G','MGnchen'),('9999','Lucerne Publishing','Paris');
+ERROR 1136 (21S01): Column count doesn't match value count at row 6
+mysql> INSERT INTO publishers(pub_id,pub_name,city,state)
+    -> VALUES('0877','Binnet & Hardley','Washington','DC'),('1389','Algodata Infosystems','Berkeley','CA'),('9952','Scootney Books','New York','NY'),('1622','Five Lakes Publishing','Chicago','IL'),('1756','Ramona Publishers','Dallas','TX');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM publishers;
++--------+-----------------------+------------+-------+---------+
+| pub_id | pub_name              | city       | state | country |
++--------+-----------------------+------------+-------+---------+
+| 0736   | New Moon Books        | boston     | MA    | USA     |
+| 0877   | Binnet & Hardley      | Washington | DC    | USA     |
+| 1389   | Algodata Infosystems  | Berkeley   | CA    | USA     |
+| 1622   | Five Lakes Publishing | Chicago    | IL    | USA     |
+| 1756   | Ramona Publishers     | Dallas     | TX    | USA     |
+| 9952   | Scootney Books        | New York   | NY    | USA     |
++--------+-----------------------+------------+-------+---------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO publishers(pub_id,pub_name,city)
+    -> VALUES('9901','GGG&G','MGnchen'),('9999','Lucerne Publishing','Paris');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM publishers;
++--------+-----------------------+------------+-------+---------+
+| pub_id | pub_name              | city       | state | country |
++--------+-----------------------+------------+-------+---------+
+| 0736   | New Moon Books        | boston     | MA    | USA     |
+| 0877   | Binnet & Hardley      | Washington | DC    | USA     |
+| 1389   | Algodata Infosystems  | Berkeley   | CA    | USA     |
+| 1622   | Five Lakes Publishing | Chicago    | IL    | USA     |
+| 1756   | Ramona Publishers     | Dallas     | TX    | USA     |
+| 9901   | GGG&G                 | MGnchen    | NULL  | USA     |
+| 9952   | Scootney Books        | New York   | NY    | USA     |
+| 9999   | Lucerne Publishing    | Paris      | NULL  | USA     |
++--------+-----------------------+------------+-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> UPDATE publishers
+    -> SET country='Germany'
+    -> where pub_id=9901;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM publishers;
++--------+-----------------------+------------+-------+---------+
+| pub_id | pub_name              | city       | state | country |
++--------+-----------------------+------------+-------+---------+
+| 0736   | New Moon Books        | boston     | MA    | USA     |
+| 0877   | Binnet & Hardley      | Washington | DC    | USA     |
+| 1389   | Algodata Infosystems  | Berkeley   | CA    | USA     |
+| 1622   | Five Lakes Publishing | Chicago    | IL    | USA     |
+| 1756   | Ramona Publishers     | Dallas     | TX    | USA     |
+| 9901   | GGG&G                 | MGnchen    | NULL  | Germany |
+| 9952   | Scootney Books        | New York   | NY    | USA     |
+| 9999   | Lucerne Publishing    | Paris      | NULL  | USA     |
++--------+-----------------------+------------+-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> UPDATE publishers
+    -> SET country='France'
+    -> where pub_id=9999;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM publishers;
++--------+-----------------------+------------+-------+---------+
+| pub_id | pub_name              | city       | state | country |
++--------+-----------------------+------------+-------+---------+
+| 0736   | New Moon Books        | boston     | MA    | USA     |
+| 0877   | Binnet & Hardley      | Washington | DC    | USA     |
+| 1389   | Algodata Infosystems  | Berkeley   | CA    | USA     |
+| 1622   | Five Lakes Publishing | Chicago    | IL    | USA     |
+| 1756   | Ramona Publishers     | Dallas     | TX    | USA     |
+| 9901   | GGG&G                 | MGnchen    | NULL  | Germany |
+| 9952   | Scootney Books        | New York   | NY    | USA     |
+| 9999   | Lucerne Publishing    | Paris      | NULL  | France  |
++--------+-----------------------+------------+-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> insert authors   values('409-56-7008', 'Bennet', 'Abraham', '415 658-9932',   '6223 Bateman St.', 'Berkeley', 'CA', '94705', 1);insert authors   values('213-46-8915', 'Green', 'Marjorie', '415 986-7020',   '309 63rd St. #411', 'Oakland', 'CA', '94618', 1);insert authors   values('238-95-7766', 'Carson', 'Cheryl', '415 548-7723',   '589 Darwin Ln.', 'Berkeley', 'CA', '94705', 1);insert authors   values('998-72-3567', 'Ringer', 'Albert', '801 826-0752',   '67 Seventh Av.', 'Salt Lake City', 'UT', '84152', 1);insert authors   values('899-46-2035', 'Ringer', 'Anne', '801 826-0752',   '67 Seventh Av.', 'Salt Lake City', 'UT', '84152', 1);insert authors   values('722-51-5454', 'DeFrance', 'Michel', '219 547-9982',   '3 Balding Pl.', 'Gary', 'IN', '46403', 1);insert authors   values('807-91-6654', 'Panteley', 'Sylvia', '301 946-8853',   '1956 Arlington Pl.', 'Rockville', 'MD', '20853', 1);insert authors   values('893-72-1158', 'McBadden', 'Heather',   '707 448-4982', '301 Putnam', 'Vacaville', 'CA', '95688', 0);insert authors   values('724-08-9931', 'Stringer', 'Dirk', '415 843-2991',   '5420 Telegraph Av.', 'Oakland', 'CA', '94609', 0);insert authors   values('274-80-9391', 'Straight', 'Dean', '415 834-2919',   '5420 College Av.', 'Oakland', 'CA', '94609', 1);insert authors   values('756-30-7391', 'Karsen', 'Livia', '415 534-9219',   '5720 McAuley St.', 'Oakland', 'CA', '94609', 1);insert authors   values('724-80-9391', 'MacFeather', 'Stearns', '415 354-7128',   '44 Upland Hts.', 'Oakland', 'CA', '94612', 1);insert authors   values('427-17-2319', 'Dull', 'Ann', '415 836-7128',   '3410 Blonde St.', 'Palo Alto', 'CA', '94301', 1);insert authors   values('672-71-3249', 'Yokomoto', 'Akiko', '415 935-4228',   '3 Silver Ct.', 'Walnut Creek', 'CA', '94595', 1);insert authors   values('267-41-2394', 'O''Leary', 'Michael', '408 286-2428',   '22 Cleveland Av. #14', 'San Jose', 'CA', '95128', 1);insert authors   values('472-27-2349', 'Gringlesby', 'Burt', '707 938-6445',   'PO Box 792', 'Covelo', 'CA', '95428', 3);insert authors   values('527-72-3246', 'Greene', 'Morningstar', '615 297-2723',   '22 Graybar House Rd.', 'Nashville', 'TN', '37215', 0);insert authors   values('172-32-1176', 'White', 'Johnson', '408 496-7223',   '10932 Bigge Rd.', 'Menlo Park', 'CA', '94025', 1);insert authors   values('712-45-1867', 'del Castillo', 'Innes', '615 996-8275',   '2286 Cram Pl. #86', 'Ann Arbor', 'MI', '48105', 1);insert authors   values('846-92-7186', 'Hunter', 'Sheryl', '415 836-7128',   '3410 Blonde St.', 'Palo Alto', 'CA', '94301', 1);insert authors   values('486-29-1786', 'Locksley', 'Charlene', '415 585-4620',   '18 Broadway Av.', 'San Francisco', 'CA', '94130', 1);insert authors   values('648-92-1872', 'Blotchet-Halls', 'Reginald', '503 745-6402',   '55 Hillsdale Bl.', 'Corvallis', 'OR', '97330', 1);insert authors   values('341-22-1782', 'Smith', 'Meander', '913 843-0462',   '10 Mississippi Dr.', 'Lawrence', 'KS', '66044', 0);
+Query OK, 1 row affected (0.02 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM authors;
++-------------+----------------+-------------+--------------+----------------------+----------------+-------+-------+----------+
+| au_id       | au_lname       | au_fname    | phone        | address              | city           | state | zip   | contract |
++-------------+----------------+-------------+--------------+----------------------+----------------+-------+-------+----------+
+| 172-32-1176 | White          | Johnson     | 408 496-7223 | 10932 Bigge Rd.      | Menlo Park     | CA    | 94025 |        1 |
+| 213-46-8915 | Green          | Marjorie    | 415 986-7020 | 309 63rd St. #411    | Oakland        | CA    | 94618 |        1 |
+| 238-95-7766 | Carson         | Cheryl      | 415 548-7723 | 589 Darwin Ln.       | Berkeley       | CA    | 94705 |        1 |
+| 267-41-2394 | O'Leary        | Michael     | 408 286-2428 | 22 Cleveland Av. #14 | San Jose       | CA    | 95128 |        1 |
+| 274-80-9391 | Straight       | Dean        | 415 834-2919 | 5420 College Av.     | Oakland        | CA    | 94609 |        1 |
+| 341-22-1782 | Smith          | Meander     | 913 843-0462 | 10 Mississippi Dr.   | Lawrence       | KS    | 66044 |        0 |
+| 409-56-7008 | Bennet         | Abraham     | 415 658-9932 | 6223 Bateman St.     | Berkeley       | CA    | 94705 |        1 |
+| 427-17-2319 | Dull           | Ann         | 415 836-7128 | 3410 Blonde St.      | Palo Alto      | CA    | 94301 |        1 |
+| 472-27-2349 | Gringlesby     | Burt        | 707 938-6445 | PO Box 792           | Covelo         | CA    | 95428 |        3 |
+| 486-29-1786 | Locksley       | Charlene    | 415 585-4620 | 18 Broadway Av.      | San Francisco  | CA    | 94130 |        1 |
+| 527-72-3246 | Greene         | Morningstar | 615 297-2723 | 22 Graybar House Rd. | Nashville      | TN    | 37215 |        0 |
+| 648-92-1872 | Blotchet-Halls | Reginald    | 503 745-6402 | 55 Hillsdale Bl.     | Corvallis      | OR    | 97330 |        1 |
+| 672-71-3249 | Yokomoto       | Akiko       | 415 935-4228 | 3 Silver Ct.         | Walnut Creek   | CA    | 94595 |        1 |
+| 712-45-1867 | del Castillo   | Innes       | 615 996-8275 | 2286 Cram Pl. #86    | Ann Arbor      | MI    | 48105 |        1 |
+| 722-51-5454 | DeFrance       | Michel      | 219 547-9982 | 3 Balding Pl.        | Gary           | IN    | 46403 |        1 |
+| 724-08-9931 | Stringer       | Dirk        | 415 843-2991 | 5420 Telegraph Av.   | Oakland        | CA    | 94609 |        0 |
+| 724-80-9391 | MacFeather     | Stearns     | 415 354-7128 | 44 Upland Hts.       | Oakland        | CA    | 94612 |        1 |
+| 756-30-7391 | Karsen         | Livia       | 415 534-9219 | 5720 McAuley St.     | Oakland        | CA    | 94609 |        1 |
+| 807-91-6654 | Panteley       | Sylvia      | 301 946-8853 | 1956 Arlington Pl.   | Rockville      | MD    | 20853 |        1 |
+| 846-92-7186 | Hunter         | Sheryl      | 415 836-7128 | 3410 Blonde St.      | Palo Alto      | CA    | 94301 |        1 |
+| 893-72-1158 | McBadden       | Heather     | 707 448-4982 | 301 Putnam           | Vacaville      | CA    | 95688 |        0 |
+| 899-46-2035 | Ringer         | Anne        | 801 826-0752 | 67 Seventh Av.       | Salt Lake City | UT    | 84152 |        1 |
+| 998-72-3567 | Ringer         | Albert      | 801 826-0752 | 67 Seventh Av.       | Salt Lake City | UT    | 84152 |        1 |
++-------------+----------------+-------------+--------------+----------------------+----------------+-------+-------+----------+
+23 rows in set (0.00 sec)
+
+mysql> insert titles values ('PC8888', 'Secrets of Silicon Valley', 'popular_comp', '1389',20.00, 8000.00, 10, 4095,'Muckraking reporting on the world''s largest computer hardware and software manufacturers.','1994-06-12');insert titles values ('BU1032', 'The Busy Executive''s Database Guide', 'business','1389', 19.99, 5000.00, 10, 4095,'An overview of available database systems with emphasis on common business applications. Illustrated.','1991-06-12');insert titles values ('PS7777', 'Emotional Security: A New Algorithm', 'psychology','0736', 7.99, 4000.00, 10, 3336,'Protecting yourself and your loved ones from undue emotional stress in the modern world. Use of computer and nutritional aids emphasized.','1991-06-12');insert titles values ('PS3333', 'Prolonged Data Deprivation: Four Case Studies','psychology', '0736', 19.99, 2000.00, 10, 4072,'What happens when the data runs dry?  Searching evaluations of information-shortage effects.','1991-06-12');insert titles values ('BU1111', 'Cooking with Computers: Surreptitious Balance Sheets','business', '1389', 11.95, 5000.00, 10, 3876,'Helpful hints on how to use your electronic resources to the best advantage.','1991-06-09');insert titles values ('MC2222', 'Silicon Valley Gastronomic Treats', 'mod_cook', '0877',19.99, 0.00, 12, 2032,'Favorite recipes for quick, easy, and elegant meals.','1991-06-09');insert titles values ('TC7777', 'Sushi, Anyone?', 'trad_cook', '0877', 14.99, 8000.00,10, 4095,'Detailed instructions on how to make authentic Japanese sushi in your spare time.','1991-06-12');insert titles values ('TC4203', 'Fifty Years in Buckingham Palace Kitchens', 'trad_cook','0877', 11.95, 4000.00, 14, 15096,'More anecdotes from the Queen''s favorite cook describing life among English royalty. Recipes, techniques, tender vignettes.','1991-06-12');insert titles values ('PC1035', 'But Is It User Friendly?', 'popular_comp', '1389',22.95, 7000.00, 16, 8780,'A survey of software for the naive user, focusing on the ''friendliness'' of each.','1991-06-30');insert titles values('BU2075', 'You Can Combat Computer Stress!', 'business', '0736',2.99, 10125.00, 24, 18722,'The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.','1991-06-30');insert titles values('PS2091', 'Is Anger the Enemy?', 'psychology', '0736', 10.95,2275.00, 12, 2045,'Carefully researched study of the effects of strong emotions on the body. Metabolic charts included.','1991-06-15');insert titles values('PS2106', 'Life Without Fear', 'psychology', '0736', 7.00, 6000.00,10, 111,'New exercise, meditation, and nutritional techniques that can reduce the shock of daily interactions. Popular audience. Sample menus included, exercise video available separately.','1991-10-05');insert titles values('MC3021', 'The Gourmet Microwave', 'mod_cook', '0877', 2.99,15000.00, 24, 22246,'Traditional French gourmet recipes adapted for modern microwave cooking.','1991-06-18');insert titles values('TC3218', 'Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean','trad_cook', '0877', 20.95, 7000.00, 10, 375,'Profusely illustrated in color, this makes a wonderful gift book for a cuisine-oriented friend.','1991-10-21');insert titles (title_id, title, pub_id) values('MC3026','The Psychology of Computer Cooking', '0877');insert titles values ('BU7832', 'Straight Talk About Computers', 'business', '1389',19.99, 5000.00, 10, 4095,'Annotated analysis of what computers can do for you: a no-hype guide for the critical user.','1991-06-22');insert titles values('PS1372', 'Computer Phobic AND Non-Phobic Individuals: Behavior Variations','psychology', '0877', 21.59, 7000.00, 10, 375,'A must for the specialist, this book examines the difference between those who hate and fear computers and those who don''t.','1991-10-21');insert titles (title_id, title, type, pub_id, notes) values('PC9999', 'Net Etiquette','popular_comp', '1389', 'A must-read for computer conferencing.');
+Query OK, 1 row affected (0.01 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+ERROR 1364 (HY000): Field 'type' doesn't have a default value
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM titles;
++----------+-----------------------------------------------------------------+--------------+--------+---------+------------+---------+-----------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+
+| title_id | title                                                           | type         | pub_id | price   | advance    | royalty | ytd_sales | notes                                                                                                                                                                               | pubdate    |
++----------+-----------------------------------------------------------------+--------------+--------+---------+------------+---------+-----------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+
+| BU1032   | The Busy Executive's Database Guide                             | business     | 1389   | 19.9900 |  5000.0000 |      10 |      4095 | An overview of available database systems with emphasis on common business applications. Illustrated.                                                                               | 1991-06-12 |
+| BU1111   | Cooking with Computers: Surreptitious Balance Sheets            | business     | 1389   | 11.9500 |  5000.0000 |      10 |      3876 | Helpful hints on how to use your electronic resources to the best advantage.                                                                                                        | 1991-06-09 |
+| BU2075   | You Can Combat Computer Stress!                                 | business     | 0736   |  2.9900 | 10125.0000 |      24 |     18722 | The latest medical and psychological techniques for living with the electronic office. Easy-to-understand explanations.                                                             | 1991-06-30 |
+| BU7832   | Straight Talk About Computers                                   | business     | 1389   | 19.9900 |  5000.0000 |      10 |      4095 | Annotated analysis of what computers can do for you: a no-hype guide for the critical user.                                                                                         | 1991-06-22 |
+| MC2222   | Silicon Valley Gastronomic Treats                               | mod_cook     | 0877   | 19.9900 |     0.0000 |      12 |      2032 | Favorite recipes for quick, easy, and elegant meals.                                                                                                                                | 1991-06-09 |
+| MC3021   | The Gourmet Microwave                                           | mod_cook     | 0877   |  2.9900 | 15000.0000 |      24 |     22246 | Traditional French gourmet recipes adapted for modern microwave cooking.                                                                                                            | 1991-06-18 |
+| PC1035   | But Is It User Friendly?                                        | popular_comp | 1389   | 22.9500 |  7000.0000 |      16 |      8780 | A survey of software for the naive user, focusing on the 'friendliness' of each.                                                                                                    | 1991-06-30 |
+| PC8888   | Secrets of Silicon Valley                                       | popular_comp | 1389   | 20.0000 |  8000.0000 |      10 |      4095 | Muckraking reporting on the world's largest computer hardware and software manufacturers.                                                                                           | 1994-06-12 |
+| PC9999   | Net Etiquette                                                   | popular_comp | 1389   |    NULL |       NULL |    NULL |      NULL | A must-read for computer conferencing.                                                                                                                                              | NULL       |
+| PS1372   | Computer Phobic AND Non-Phobic Individuals: Behavior Variations | psychology   | 0877   | 21.5900 |  7000.0000 |      10 |       375 | A must for the specialist, this book examines the difference between those who hate and fear computers and those who don't.                                                         | 1991-10-21 |
+| PS2091   | Is Anger the Enemy?                                             | psychology   | 0736   | 10.9500 |  2275.0000 |      12 |      2045 | Carefully researched study of the effects of strong emotions on the body. Metabolic charts included.                                                                                | 1991-06-15 |
+| PS2106   | Life Without Fear                                               | psychology   | 0736   |  7.0000 |  6000.0000 |      10 |       111 | New exercise, meditation, and nutritional techniques that can reduce the shock of daily interactions. Popular audience. Sample menus included, exercise video available separately. | 1991-10-05 |
+| PS3333   | Prolonged Data Deprivation: Four Case Studies                   | psychology   | 0736   | 19.9900 |  2000.0000 |      10 |      4072 | What happens when the data runs dry?  Searching evaluations of information-shortage effects.                                                                                        | 1991-06-12 |
+| PS7777   | Emotional Security: A New Algorithm                             | psychology   | 0736   |  7.9900 |  4000.0000 |      10 |      3336 | Protecting yourself and your loved ones from undue emotional stress in the modern world. Use of computer and nutritional aids emphasized.                                           | 1991-06-12 |
+| TC3218   | Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | trad_cook    | 0877   | 20.9500 |  7000.0000 |      10 |       375 | Profusely illustrated in color, this makes a wonderful gift book for a cuisine-oriented friend.                                                                                     | 1991-10-21 |
+| TC4203   | Fifty Years in Buckingham Palace Kitchens                       | trad_cook    | 0877   | 11.9500 |  4000.0000 |      14 |     15096 | More anecdotes from the Queen's favorite cook describing life among English royalty. Recipes, techniques, tender vignettes.                                                         | 1991-06-12 |
+| TC7777   | Sushi, Anyone?                                                  | trad_cook    | 0877   | 14.9900 |  8000.0000 |      10 |      4095 | Detailed instructions on how to make authentic Japanese sushi in your spare time.                                                                                                   | 1991-06-12 |
++----------+-----------------------------------------------------------------+--------------+--------+---------+------------+---------+-----------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+
+17 rows in set (0.00 sec)
+
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values('409-56-7008','BU1032', '1', '60'),('486-29-1786','PS7777','1','100'),('486-29-1786','PC9999','1','100'),('712-45-1867','MC2222','1','100'),('172-32-1176','PC9999','1','100'),('213-46-8915','BU1032','2','40'),('238-95-7766','PC1035','1','100'),('213-46-8915','BU2075','1','100'),('998-72-3567','PS2091','1','50'),('899-46-2035','PS2091','2','50'),('998-72-3567','PS2106','1','100'),('722-51-5454''MC3021','1','75'),
+    -> ('899-46-2035','MC3021','2','25'),('807-91-6654','TC3218','1','100'),('274-80-9391','BU7832','1','100'),('427-17-2319','PC888','1','50'),('846-92-7186','PC888','2','50'),('756-30-7391','PS1372','1',''75'),('724-80-9391','PS1372','2',''25'),('724-80-9391','BU1111','1','60'),('267-41-2394','BU1111','2','40'),('672-71-3249','TC7777','1','40'),('267-41-2394','TC7777','2','30'),('472-27-2349','TC7777','3','30'),('648-92-1872','TC4203','1','100');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '75'),('724-80-9391','PS1372','2',''25'),('724-80-9391','BU1111','1','60'),('267-' at line 3
+mysql> SELECT * FROM titleauthors;
+ERROR 1146 (42S02): Table 'pubs.titleauthors' doesn't exist
+mysql> ('899-46-2035','MC3021','2','25'),('807-91-6654','TC3218','1','100'),('274-80-9391','BU7832','1','100'),('427-17-2319','PC888','1','50'),('846-92-7186','PC888','2','50'),('756-30-7391','PS1372','1',''75'),('724-80-9391','PS1372','2',''25'),('724-80-9391','BU1111','1','60'),('267-41-2394','BU1111','2','40'),('672-71-3249','TC7777','1','40'),('267-41-2394','TC7777','2','30'),('472-27-2349','TC7777','3','30'),('648-92-1872','TC4203','1','100');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''899-46-2035','MC3021','2','25'),('807-91-6654','TC3218','1','100'),('274-80-939' at line 1
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values('409-56-7008','BU1032', '1', '60'),('486-29-1786','PS7777','1','100'),('486-29-1786','PC9999','1','100'),('712-45-1867','MC2222','1','100'),('172-32-1176','PC9999','1','100'),('213-46-8915','BU1032','2','40'),('238-95-7766','PC1035','1','100'),('213-46-8915','BU2075','1','100'),('998-72-3567','PS2091','1','50'),('899-46-2035','PS2091','2','50'),('998-72-3567','PS2106','1','100'),('722-51-5454''MC3021','1','75');
+ERROR 1136 (21S01): Column count doesn't match value count at row 12
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values('409-56-7008','BU1032', 1, 60),('486-29-1786','PS7777',1,100),('486-29-1786','PC9999',1,100),('712-45-1867','MC2222',1,100),('172-32-1176','PC9999',1,100),('213-46-8915','BU1032',2,40),('238-95-7766','PC1035',1,100),('213-46-8915','BU2075',1,100),('998-72-3567','PS2091',1,50),('899-46-2035','PS2091',2,50),('998-72-3567','PS2106',1,100),('722-51-5454','MC3021',1,75);
+ERROR 1406 (22001): Data too long for column 'au_id' at row 1
+mysql> ALTER TABLE titleauthor MODIFY au_id VARCHAR(11);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values('409-56-7008','BU1032', 1, 60),('486-29-1786','PS7777',1,100),('486-29-1786','PC9999',1,100),('712-45-1867','MC2222',1,100),('172-32-1176','PC9999',1,100),('213-46-8915','BU1032',2,40),('238-95-7766','PC1035',1,100),('213-46-8915','BU2075',1,100),('998-72-3567','PS2091',1,50),('899-46-2035','PS2091',2,50),('998-72-3567','PS2106',1,100),('722-51-5454','MC3021',1,75);
+Query OK, 12 rows affected (0.01 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM titleauthors;
+ERROR 1146 (42S02): Table 'pubs.titleauthors' doesn't exist
+mysql> SELECT * from titleauthor;
++-------------+----------+--------+------------+
+| au_id       | title_id | au_ord | royaltyper |
++-------------+----------+--------+------------+
+| 409-56-7008 | BU1032   |      1 |         60 |
+| 486-29-1786 | PS7777   |      1 |        100 |
+| 486-29-1786 | PC9999   |      1 |        100 |
+| 712-45-1867 | MC2222   |      1 |        100 |
+| 172-32-1176 | PC9999   |      1 |        100 |
+| 213-46-8915 | BU1032   |      2 |         40 |
+| 238-95-7766 | PC1035   |      1 |        100 |
+| 213-46-8915 | BU2075   |      1 |        100 |
+| 998-72-3567 | PS2091   |      1 |         50 |
+| 899-46-2035 | PS2091   |      2 |         50 |
+| 998-72-3567 | PS2106   |      1 |        100 |
+| 722-51-5454 | MC3021   |      1 |         75 |
++-------------+----------+--------+------------+
+12 rows in set (0.01 sec)
+
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values ('899-46-2035','MC3021',2,25),('807-91-6654','TC3218',1,100),('274-80-9391','BU7832',1,100),('427-17-2319','PC888',1,50),('846-92-7186','PC888',2,50),('756-30-7391','PS1372',1,75),('724-80-9391','PS1372',2,25),('724-80-9391','BU1111',1,60),('267-41-2394','BU1111',2,40),('672-71-3249','TC7777',1,40),('267-41-2394','TC7777',2,30),('472-27-2349','TC7777',3,30),('648-92-1872','TC4203',1,100);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`pubs`.`titleauthor`, CONSTRAINT `titleauthor2_fk` FOREIGN KEY (`title_id`) REFERENCES `titles` (`title_id`))
+mysql>  INSERT titleauthor
+    -> values ('899-46-2035','MC3021',2,25),('807-91-6654','TC3218',1,100),('274-80-9391','BU7832',1,100),('427-17-2319','PC888',1,50),('846-92-7186','PC888',2,50),('756-30-7391','PS1372',1,75),('724-80-9391','PS1372',2,25),('724-80-9391','BU1111',1,60),('267-41-2394','BU1111',2,40),('672-71-3249','TC7777',1,40),('267-41-2394','TC7777',2,30),('472-27-2349','TC7777',3,30),('648-92-1872','TC4203',1,100);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`pubs`.`titleauthor`, CONSTRAINT `titleauthor2_fk` FOREIGN KEY (`title_id`) REFERENCES `titles` (`title_id`))
+mysql>  INSERT INTO titleauthor(au_id,title_id,au_ord,royaltyper)
+    -> values ('899-46-2035','MC3021',2,25),('807-91-6654','TC3218',1,100),('274-80-9391','BU7832',1,100),('427-17-2319','PC8888',1,50),('846-92-7186','PC8888',2,50),('756-30-7391','PS1372',1,75),('724-80-9391','PS1372',2,25),('724-80-9391','BU1111',1,60),('267-41-2394','BU1111',2,40),('672-71-3249','TC7777',1,40),('267-41-2394','TC7777',2,30),('472-27-2349','TC7777',3,30),('648-92-1872','TC4203',1,100);
+Query OK, 13 rows affected (0.05 sec)
+Records: 13  Duplicates: 0  Warnings: 0
+
+mysql> desc titleauthor;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| au_id      | varchar(11) | YES  | MUL | NULL    |       |
+| title_id   | varchar(10) | YES  | MUL | NULL    |       |
+| au_ord     | tinyint     | YES  |     | NULL    |       |
+| royaltyper | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.10 sec)
+
+mysql> select * from titleauthor;
++-------------+----------+--------+------------+
+| au_id       | title_id | au_ord | royaltyper |
++-------------+----------+--------+------------+
+| 409-56-7008 | BU1032   |      1 |         60 |
+| 486-29-1786 | PS7777   |      1 |        100 |
+| 486-29-1786 | PC9999   |      1 |        100 |
+| 712-45-1867 | MC2222   |      1 |        100 |
+| 172-32-1176 | PC9999   |      1 |        100 |
+| 213-46-8915 | BU1032   |      2 |         40 |
+| 238-95-7766 | PC1035   |      1 |        100 |
+| 213-46-8915 | BU2075   |      1 |        100 |
+| 998-72-3567 | PS2091   |      1 |         50 |
+| 899-46-2035 | PS2091   |      2 |         50 |
+| 998-72-3567 | PS2106   |      1 |        100 |
+| 722-51-5454 | MC3021   |      1 |         75 |
+| 899-46-2035 | MC3021   |      2 |         25 |
+| 807-91-6654 | TC3218   |      1 |        100 |
+| 274-80-9391 | BU7832   |      1 |        100 |
+| 427-17-2319 | PC8888   |      1 |         50 |
+| 846-92-7186 | PC8888   |      2 |         50 |
+| 756-30-7391 | PS1372   |      1 |         75 |
+| 724-80-9391 | PS1372   |      2 |         25 |
+| 724-80-9391 | BU1111   |      1 |         60 |
+| 267-41-2394 | BU1111   |      2 |         40 |
+| 672-71-3249 | TC7777   |      1 |         40 |
+| 267-41-2394 | TC7777   |      2 |         30 |
+| 472-27-2349 | TC7777   |      3 |         30 |
+| 648-92-1872 | TC4203   |      1 |        100 |
++-------------+----------+--------+------------+
+25 rows in set (0.00 sec)
+
+mysql> /c
+    -> \c
+mysql> /!cls
+    -> \! cls;
+    -> /c
+    -> \c
+mysql> \t
+
+

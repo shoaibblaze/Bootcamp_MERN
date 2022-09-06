@@ -1,0 +1,233 @@
+1)
+C:\temp>mongoimport --db blazeclan --collection emps --file C:\temp\EMP.json
+2022-09-04T23:33:46.902+0530    connected to: mongodb://localhost/
+2022-09-04T23:33:46.932+0530    14 document(s) imported successfully. 0 document(s) failed to import.
+
+C:\temp>mongoimport --db blazeclan --collection depts --file C:\temp\DEPT.json
+2022-09-04T23:34:41.413+0530    connected to: mongodb://localhost/
+2022-09-04T23:34:41.472+0530    4 document(s) imported successfully. 0 document(s) failed to import.
+
+2)
+blazeclan> db.depts.find().count()
+4
+blazeclan> db.depts.deleteOne( {deptName : 'Operations'})
+{ acknowledged: true, deletedCount: 1 }
+blazeclan> db.depts.find()
+[
+  { _id: 20, deptName: 'Research', location: 'Dallas' },
+  { _id: 30, deptName: 'Sales', location: 'Chicago' },
+  { _id: 10, deptName: 'Accounting', location: 'New York' }
+]
+
+3)
+blazeclan> db.emps.deleteMany({designation : 'SALESMAN'})
+{ acknowledged: true, deletedCount: 4 }
+
+blazeclan> db.emps.find({designation : 'SALESMAN'})
+
+blazeclan>
+
+4)
+blazeclan> db.emps.update({_id :7900},{$set : {"salary":1200}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({_id:7900})
+[
+  {
+    _id: 7900,
+    empName: 'James',
+    designation: 'CLERK',
+    mgrID: 7698,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 1200,
+    deptID: 30,
+    hasComm: false
+  }
+]
+
+5)
+blazeclan> db.emps.update({_id :7900},{set : {"salary":1200}})
+MongoInvalidArgumentError: Update document requires atomic operators
+
+7)
+blazeclan> db.emps.find({"_id":7566})
+[
+  {
+    _id: 7566,
+    empName: 'Jones',
+    designation: 'MANAGER',
+    mgrID: 7839,
+    hireDate: '1981-04-02T00:00:00',
+    salary: 2975,
+    deptID: 20,
+    hasComm: false
+  }
+]
+blazeclan> db.emps.update({"_id":{$eq:7566}},{$inc:{"salary":25}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({"_id":7566})
+[
+  {
+    _id: 7566,
+    empName: 'Jones',
+    designation: 'MANAGER',
+    mgrID: 7839,
+    hireDate: '1981-04-02T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false
+  }
+]
+8)
+
+blazeclan> db.emps.update({designation: 'ANALYST'},{$inc:{"count":1}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    count: 1
+  },
+9)
+blazeclan> db.emps.update({designation: 'ANALYST'},{$inc:{"testers":2}},{"upsert":true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    count: 3,
+    testers: 2
+  }
+
+10)
+blazeclan> db.emps.update({designation: 'ANALYST'},{$unset:{"count": " "}},{multi:true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    testers: 2
+  },
+
+11)
+blazeclan> db.depts.find()
+[
+  { _id: 20, deptName: 'Research', location: 'Dallas' },
+  { _id: 30, deptName: 'Sales', location: 'Chicago' },
+  { _id: 10, deptName: 'Accounting', location: 'New York' }
+]
+blazeclan> db.depts.update({},{$rename: {"location":"city"}},{multi:true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+blazeclan> db.depts.find()
+[
+  { _id: 20, deptName: 'Research', city: 'Dallas' },
+  { _id: 30, deptName: 'Sales', city: 'Chicago' },
+  { _id: 10, deptName: 'Accounting', city: 'New York' }
+]
+
+12)
+blazeclan> db.depts.aggregate( [ { $group : { "_id" : "$deptName" } } ] )
+[ { _id: 'Sales' }, { _id: 'Accounting' }, { _id: 'Research' } ]
+
+13)
+blazeclan> db.emps.aggregate([{$group : {_id:"$deptID",count:{$count : {}}}}])
+[ { _id: 10, count: 3 }, { _id: 20, count: 5 }, { _id: 30, count: 2 } ]
+
+14)
+
+blazeclan> db.emps.aggregate([{$group : {_id:"$designation",count:{$count : {}}}}])
+[
+  { _id: 'MANAGER', count: 3 },
+  { _id: 'ANALYST', count: 2 },
+  { _id: 'PRESIDENT', count: 1 },
+  { _id: 'CLERK', count: 4 }
+]
+
+15)
+blazeclan> db.emps.aggregate([{$group : {_id:"$designation",average:{$avg : "$salary"},maximum:{$max : "$salary"},minimum :{$min : "$salary"},},},])
+[
+  {
+    _id: 'MANAGER',
+    average: 2766.6666666666665,
+    maximum: 3000,
+    minimum: 2450
+  },
+  { _id: 'ANALYST', average: 3000, maximum: 3000, minimum: 3000 },
+  { _id: 'PRESIDENT', average: 5000, maximum: 5000, minimum: 5000 },
+  { _id: 'CLERK', average: 1100, maximum: 1300, minimum: 800 }
+]
+
+16)
+blazeclan> db.emps.aggregate([ { $group: { _id: "$deptID", average: { $avg: "$salary" }, maximum: { $max: "$salary" }, minimum: { $min: "$salary" } } }])
+[
+  { _id: 20, average: 2180, maximum: 3000, minimum: 800 },
+  {
+    _id: 10,
+    average: 2916.6666666666665,
+    maximum: 5000,
+    minimum: 1300
+  },
+  { _id: 30, average: 2025, maximum: 2850, minimum: 1200 }
+]
+
+17)
+blazeclan> db.emps.aggregate([ { $group: { _id: "$deptID", average: { $avg: "$salary" }, maximum: { $max: "$salary" }, minimum: { $min: "$salary" } } },{$match: {_id:20}}])
+[ { _id: 20, average: 2180, maximum: 3000, minimum: 800 } ]

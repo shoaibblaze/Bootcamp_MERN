@@ -1,0 +1,127 @@
+
+mysql> USE PUBS;
+Database changed
+mysql> CREATE TABLE EMPLOYEE(EMP_ID INT(4) PRIMARY KEY AUTO_INCREMENT,NAME VARCHAR(25),BASIC_SAL FLOAT (9,2)); 
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> ALTER TABLE EMPLOYEE MODIFY COLUMN NAME VARCHAR(5);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO EMPLOYEE VALUES (1,'PATEL',795);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO EMPLOYEE VALUES (2,'BDANC',860);
+Query OK, 1 row affected (0.00 sec)
+
+mysql>  insert into employee values(3,'BEN' ,1100);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employee values(4,'CHAD' ,750);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employee values(5,'AUDRY' ,1550);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> UPDATE EMPLOYEE SET BASIC_SAL=NULL WHERE 0=EMP_ID%2; 
+Query OK, 2 rows affected (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> SELECT * FROM EMPLOYEE;
++--------+-------+-----------+
+| EMP_ID | NAME  | BASIC_SAL |
++--------+-------+-----------+
+|      1 | PATEL |    795.00 |
+|      2 | BDANC |      NULL |
+|      3 | BEN   |   1100.00 |
+|      4 | CHAD  |      NULL |
+|      5 | AUDRY |   1550.00 |
++--------+-------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> ALTER TABLE EMPLOYEE CHANGE BASIC_SAL SALARY BIGINT NOT NULL;
+ERROR 1265 (01000): Data truncated for column 'SALARY' at row 2
+
+
+mysql> ALTER TABLE EMPLOYEE CHANGE BASIC_SAL SALARY BIGINT;
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> DESC EMPLOYEE;
++--------+------------+------+-----+---------+----------------+
+| Field  | Type       | Null | Key | Default | Extra          |
++--------+------------+------+-----+---------+----------------+
+| EMP_ID | int(4)     | NO   | PRI | NULL    | auto_increment |
+| NAME   | varchar(5) | YES  |     | NULL    |                |
+| SALARY | bigint(20) | YES  |     | NULL    |                |
++--------+------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+
+
+mysql> ALTER TABLE EMPLOYEE ADD  EMAIL_ID VARCHAR (20) NOT NULL;
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> DESC EMPLOYEE;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| EMP_ID   | int(4)      | NO   | PRI | NULL    | auto_increment |
+| NAME     | varchar(5)  | YES  |     | NULL    |                |
+| SALARY   | bigint(20)  | YES  |     | NULL    |                |
+| EMAIL_ID | varchar(20) | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> INSERT INTO EMPLOYEE VALUES (6,'MAA',5000,NULL);
+ERROR 1048 (23000): Column 'EMAIL_ID' cannot be null
+mysql> ALTER TABLE EMPLOYEE DROP COLUMN EMAIL_ID;
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> DESC EMPLOYEE
+    -> ;
++--------+------------+------+-----+---------+----------------+
+| Field  | Type       | Null | Key | Default | Extra          |
++--------+------------+------+-----+---------+----------------+
+| EMP_ID | int(4)     | NO   | PRI | NULL    | auto_increment |
+| NAME   | varchar(5) | YES  |     | NULL    |                |
+| SALARY | bigint(20) | YES  |     | NULL    |                |
++--------+------------+------+-----+---------+----------------+
+3 rows in set (0.02 sec)
+
+mysql> ALTER TABLE EMPLOYEE RENAME TO MY_EMP2;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM MY_EMP2;
++--------+-------+--------+
+| EMP_ID | NAME  | SALARY |
++--------+-------+--------+
+|      1 | PATEL |    795 |
+|      2 | BDANC |   NULL |
+|      3 | BEN   |   1100 |
+|      4 | CHAD  |   NULL |
+|      5 | AUDRY |   1550 |
++--------+-------+--------+
+5 rows in set (0.01 sec)
+
+mysql> DROP TABLE MY_EMP2;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| pubs               |
+| test               |
++--------------------+
+5 rows in set (0.01 sec)
+
+
+mysql> DROP TABLE IF EXISTS  MY_EMP2;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+

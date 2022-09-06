@@ -1,0 +1,404 @@
+mysql> USE PUBS;
+Database changed
+mysql> SELECT MIN(PRICE) 'MINIMUM_PRICE' ,MAX(PRICE) 'MAXIMUM_PRICE' ,AVG(PRICE) 'AVERAGE_PRICE' FROM TITLES;
++---------------+---------------+---------------+
+| MINIMUM_PRICE | MAXIMUM_PRICE | AVERAGE_PRICE |
++---------------+---------------+---------------+
+|        2.9900 |       22.9500 |   14.76625000 |
++---------------+---------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> DESC TITLES;
++-----------+---------------+------+-----+-----------+-------+
+| Field     | Type          | Null | Key | Default   | Extra |
++-----------+---------------+------+-----+-----------+-------+
+| title_id  | varchar(10)   | NO   | PRI |           |       |
+| title     | varchar(80)   | NO   |     | NULL      |       |
+| type      | char(12)      | NO   |     | UNDECIDED |       |
+| pub_id    | char(4)       | YES  | MUL | NULL      |       |
+| price     | decimal(10,4) | YES  |     | NULL      |       |
+| advance   | decimal(10,4) | YES  |     | NULL      |       |
+| royalty   | int(11)       | YES  |     | NULL      |       |
+| ytd_sales | int(11)       | YES  |     | NULL      |       |
+| notes     | text          | YES  |     | NULL      |       |
+| pubdate   | date          | YES  |     | NULL      |       |
++-----------+---------------+------+-----+-----------+-------+
+10 rows in set (0.02 sec)
+
+mysql> DESC AUTHORS;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| au_id    | varchar(11) | NO   | PRI |         |       |
+| au_lname | varchar(40) | NO   |     | NULL    |       |
+| au_fname | varchar(20) | NO   |     | NULL    |       |
+| phone    | char(12)    | NO   |     | UNKOWN  |       |
+| address  | varchar(40) | YES  |     | NULL    |       |
+| city     | varchar(20) | YES  |     | NULL    |       |
+| state    | char(2)     | YES  |     | NULL    |       |
+| zip      | char(5)     | YES  |     | NULL    |       |
+| contract | tinyint(4)  | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+9 rows in set (0.01 sec)
+
+mysql> DESC TITLEAUTHORS;
+ERROR 1146 (42S02): Table 'pubs.titleauthors' doesn't exist
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| pubs               |
+| test               |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| demo           |
+| publishers     |
+| titleauthor    |
+| titles         |
++----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT  TYPE 'BOOK CATEGORY',AVG(PRICE) 'AVERAGE_PRICE' FROM TITLES GROUP BY TYPE;
++---------------+---------------+
+| BOOK CATEGORY | AVERAGE_PRICE |
++---------------+---------------+
+| business      |   13.73000000 |
+| mod_cook      |   11.49000000 |
+| popular_comp  |   21.47500000 |
+| psychology    |   13.50400000 |
+| trad_cook     |   15.96333333 |
+| UNDECIDED     |          NULL |
++---------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(TYPE)'# OF BOOK' ,TYPE 'BOOK CATEGORY' FROM TITLES GROUP BY TYPE;
++-----------+---------------+
+| # OF BOOK | BOOK CATEGORY |
++-----------+---------------+
+|         4 | business      |
+|         2 | mod_cook      |
+|         3 | popular_comp  |
+|         5 | psychology    |
+|         3 | trad_cook     |
+|         1 | UNDECIDED     |
++-----------+---------------+
+6 rows in set (0.00 sec)
+
+
+mysql> SELECT COUNT(TYPE)'# OF BOOK' ,TYPE 'BOOK CATEGORY' FROM TITLES GROUP BY TYPE ORDER BY COUNT(TYPE);
++-----------+---------------+
+| # OF BOOK | BOOK CATEGORY |
++-----------+---------------+
+|         1 | UNDECIDED     |
+|         2 | mod_cook      |
+|         3 | popular_comp  |
+|         3 | trad_cook     |
+|         4 | business      |
+|         5 | psychology    |
++-----------+---------------+
+6 rows in set (0.00 sec)
+
+
+mysql> SELECT AVG(PRICE),TYPE FROM TITLES GROUP BY TYPE,TITLE WITH ROLLUP ;  
++-------------+--------------+
+| AVG(PRICE)  | TYPE         |
++-------------+--------------+
+| 11.95000000 | business     |
+| 19.99000000 | business     |
+| 19.99000000 | business     |
+|  2.99000000 | business     |
+| 13.73000000 | business     |
+| 19.99000000 | mod_cook     |
+|  2.99000000 | mod_cook     |
+| 11.49000000 | mod_cook     |
+| 22.95000000 | popular_comp |
+|        NULL | popular_comp |
+| 20.00000000 | popular_comp |
+| 21.47500000 | popular_comp |
+| 21.59000000 | psychology   |
+|  7.99000000 | psychology   |
+| 10.95000000 | psychology   |
+|  7.00000000 | psychology   |
+| 19.99000000 | psychology   |
+| 13.50400000 | psychology   |
+| 11.95000000 | trad_cook    |
+| 20.95000000 | trad_cook    |
+| 14.99000000 | trad_cook    |
+| 15.96333333 | trad_cook    |
+|        NULL | UNDECIDED    |
+|        NULL | UNDECIDED    |
+| 14.76625000 | NULL         |
++-------------+--------------+
+25 rows in set (0.00 sec)
+
+
+
+mysql> SELECT AVG(PRICE),TYPE,TITLE FROM TITLES GROUP BY TYPE,TITLE WITH ROLLUP ;  
++-------------+--------------+-----------------------------------------------------------------+
+| AVG(PRICE)  | TYPE         | TITLE                                                           |
++-------------+--------------+-----------------------------------------------------------------+
+| 11.95000000 | business     | Cooking with Computers: Surreptitious Balance Sheets            |
+| 19.99000000 | business     | Straight Talk About Computers                                   |
+| 19.99000000 | business     | The Busy Executive's Database Guide                             |
+|  2.99000000 | business     | You Can Combat Computer Stress!                                 |
+| 13.73000000 | business     | NULL                                                            |
+| 19.99000000 | mod_cook     | Silicon Valley Gastronomic Treats                               |
+|  2.99000000 | mod_cook     | The Gourmet Microwave                                           |
+| 11.49000000 | mod_cook     | NULL                                                            |
+| 22.95000000 | popular_comp | But Is It User Friendly?                                        |
+|        NULL | popular_comp | Net Etiquette                                                   |
+| 20.00000000 | popular_comp | Secrets of Silicon Valley                                       |
+| 21.47500000 | popular_comp | NULL                                                            |
+| 21.59000000 | psychology   | Computer Phobic AND Non-Phobic Individuals: Behavior Variations |
+|  7.99000000 | psychology   | Emotional Security: A New Algorithm                             |
+| 10.95000000 | psychology   | Is Anger the Enemy?                                             |
+|  7.00000000 | psychology   | Life Without Fear                                               |
+| 19.99000000 | psychology   | Prolonged Data Deprivation: Four Case Studies                   |
+| 13.50400000 | psychology   | NULL                                                            |
+| 11.95000000 | trad_cook    | Fifty Years in Buckingham Palace Kitchens                       |
+| 20.95000000 | trad_cook    | Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean |
+| 14.99000000 | trad_cook    | Sushi, Anyone?                                                  |
+| 15.96333333 | trad_cook    | NULL                                                            |
+|        NULL | UNDECIDED    | The Psychology of Computer Cooking                              |
+|        NULL | UNDECIDED    | NULL                                                            |
+| 14.76625000 | NULL         | NULL                                                            |
++-------------+--------------+-----------------------------------------------------------------+
+25 rows in set (0.00 sec)
+
+
+mysql> SELECT AVG(PRICE),TYPE FROM TITLES GROUP BY TYPE,TITLE WITH ROLLUP LIMIT 2 ;  
++-------------+----------+
+| AVG(PRICE)  | TYPE     |
++-------------+----------+
+| 11.95000000 | business |
+| 19.99000000 | business |
++-------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(TYPE),TYPE FROM TITLES GROUP BY TYPE HAVING COUNT(TYPE)>4  ORDER BY COUNT(TYPE) DESC;
++-------------+------------+
+| COUNT(TYPE) | TYPE       |
++-------------+------------+
+|           5 | psychology |
++-------------+------------+
+1 row in set (0.00 sec)
+
+
+mysql> SELECT COUNT(TYPE),TYPE FROM TITLES GROUP BY TYPE HAVING COUNT(TYPE)<4  ORDER BY COUNT(TYPE) DESC;
++-------------+--------------+
+| COUNT(TYPE) | TYPE         |
++-------------+--------------+
+|           3 | popular_comp |
+|           3 | trad_cook    |
+|           2 | mod_cook     |
+|           1 | UNDECIDED    |
++-------------+--------------+
+4 rows in set (0.00 sec)
+
+
+
+mysql> SELECT STATE,COUNT(STATE) AS 'COUNT OF STATE' FROM AUTHORS GROUP BY STATE; 
++-------+----------------+
+| STATE | COUNT OF STATE |
++-------+----------------+
+| CA    |             15 |
+| IN    |              1 |
+| KS    |              1 |
+| MD    |              1 |
+| MI    |              1 |
+| OR    |              1 |
+| TN    |              1 |
+| UT    |              2 |
++-------+----------------+
+8 rows in set (0.00 sec)
+
+
+mysql>  SELECT STATE AS 'COUNT OF STATE' FROM AUTHORS GROUP BY STATE ORDER BY COUNT(STATE) DESC LIMIT 1;
++----------------+
+| COUNT OF STATE |
++----------------+
+| CA             |
++----------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',PUB_ID  FROM TITLES GROUP BY PUB_ID ORDER BY SUM(YTD_SALES) DESC; 
++-------------------+--------+
+| QUANTITY OF SALES | PUB_ID |
++-------------------+--------+
+|             44219 | 0877   |
+|             28286 | 0736   |
+|             24941 | 1389   |
++-------------------+--------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',IFNULL( TYPE,'ALL TYPES') 'BOOK TYPE'  FROM TITLES GROUP BY TYPE WITH  ROLLUP ; 
++-------------------+--------------+
+| QUANTITY OF SALES | BOOK TYPE    |
++-------------------+--------------+
+|             30788 | business     |
+|             24278 | mod_cook     |
+|             12875 | popular_comp |
+|              9939 | psychology   |
+|             19566 | trad_cook    |
+|              NULL | UNDECIDED    |
+|             97446 | ALL TYPES    |
++-------------------+--------------+
+7 rows in set (0.00 sec)
+
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',IFNULL( TYPE,'ALL TYPES') 'BOOK TYPE'   FROM TITLES GROUP BY TYPE WITH  ROLLUP HAVING SUM(YTD_SALES)<10000 ; 
++-------------------+------------+
+| QUANTITY OF SALES | BOOK TYPE  |
++-------------------+------------+
+|              9939 | psychology |
++-------------------+------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',IFNULL( TYPE,'ALL TYPES') 'BOOK TYPE'   FROM TITLES GROUP BY TYPE WITH  ROLLUP HAVING SUM(YTD_SALES)>=10000 AND SUM(YTD_SALES)<25000 ; 
++-------------------+--------------+
+| QUANTITY OF SALES | BOOK TYPE    |
++-------------------+--------------+
+|             24278 | mod_cook     |
+|             12875 | popular_comp |
+|             19566 | trad_cook    |
++-------------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',IFNULL( TYPE,'ALL TYPES') 'BOOK TYPE'   FROM TITLES GROUP BY TYPE WITH  ROLLUP HAVING SUM(YTD_SALES)>25000 ;
++-------------------+-----------+
+| QUANTITY OF SALES | BOOK TYPE |
++-------------------+-----------+
+|             30788 | business  |
+|             97446 | ALL TYPES |
++-------------------+-----------+
+2 rows in set (0.00 sec)
+
+
+mysql> SELECT SUM(YTD_SALES) 'QUANTITY OF SALES',PUB_ID 'PUBLISHER_ID'   FROM TITLES GROUP BY PUB_ID  HAVING SUM(YTD_SALES)>25000 ;
++-------------------+--------------+
+| QUANTITY OF SALES | PUBLISHER_ID |
++-------------------+--------------+
+|             28286 | 0736         |
+|             44219 | 0877         |
++-------------------+--------------+
+2 rows in set (0.00 sec)
+
+
+
+mysql> SELECT TYPE,PUB_ID,AVG(PRICE),SUM(YTD_SALES) FROM TITLES GROUP BY TYPE,PUB_ID ;
++--------------+--------+-------------+----------------+
+| TYPE         | PUB_ID | AVG(PRICE)  | SUM(YTD_SALES) |
++--------------+--------+-------------+----------------+
+| business     | 0736   |  2.99000000 |          18722 |
+| business     | 1389   | 17.31000000 |          12066 |
+| mod_cook     | 0877   | 11.49000000 |          24278 |
+| popular_comp | 1389   | 21.47500000 |          12875 |
+| psychology   | 0736   | 11.48250000 |           9564 |
+| psychology   | 0877   | 21.59000000 |            375 |
+| trad_cook    | 0877   | 15.96333333 |          19566 |
+| UNDECIDED    | 0877   |        NULL |           NULL |
++--------------+--------+-------------+----------------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT TYPE,PUB_ID,AVG(PRICE),SUM(YTD_SALES) FROM TITLES GROUP BY TYPE,PUB_ID WITH ROLLUP;
++--------------+--------+-------------+----------------+
+| TYPE         | PUB_ID | AVG(PRICE)  | SUM(YTD_SALES) |
++--------------+--------+-------------+----------------+
+| business     | 0736   |  2.99000000 |          18722 |
+| business     | 1389   | 17.31000000 |          12066 |
+| business     | NULL   | 13.73000000 |          30788 |
+| mod_cook     | 0877   | 11.49000000 |          24278 |
+| mod_cook     | NULL   | 11.49000000 |          24278 |
+| popular_comp | 1389   | 21.47500000 |          12875 |
+| popular_comp | NULL   | 21.47500000 |          12875 |
+| psychology   | 0736   | 11.48250000 |           9564 |
+| psychology   | 0877   | 21.59000000 |            375 |
+| psychology   | NULL   | 13.50400000 |           9939 |
+| trad_cook    | 0877   | 15.96333333 |          19566 |
+| trad_cook    | NULL   | 15.96333333 |          19566 |
+| UNDECIDED    | 0877   |        NULL |           NULL |
+| UNDECIDED    | NULL   |        NULL |           NULL |
+| NULL         | NULL   | 14.76625000 |          97446 |
++--------------+--------+-------------+----------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT TYPE 'BOOK TYPE',PUB_ID 'PUBLISHER ID',AVG(PRICE) 'Average price',SUM(YTD_SALES )'QTY OF SALES ' FROM TITLES GROUP BY TYPE,PUB_ID WITH ROLLUP;
++--------------+--------------+---------------+---------------+
+| BOOK TYPE    | PUBLISHER ID | Average price | QTY OF SALES  |
++--------------+--------------+---------------+---------------+
+| business     | 0736         |    2.99000000 |         18722 |
+| business     | 1389         |   17.31000000 |         12066 |
+| business     | NULL         |   13.73000000 |         30788 |
+| mod_cook     | 0877         |   11.49000000 |         24278 |
+| mod_cook     | NULL         |   11.49000000 |         24278 |
+| popular_comp | 1389         |   21.47500000 |         12875 |
+| popular_comp | NULL         |   21.47500000 |         12875 |
+| psychology   | 0736         |   11.48250000 |          9564 |
+| psychology   | 0877         |   21.59000000 |           375 |
+| psychology   | NULL         |   13.50400000 |          9939 |
+| trad_cook    | 0877         |   15.96333333 |         19566 |
+| trad_cook    | NULL         |   15.96333333 |         19566 |
+| UNDECIDED    | 0877         |          NULL |          NULL |
+| UNDECIDED    | NULL         |          NULL |          NULL |
+| NULL         | NULL         |   14.76625000 |         97446 |
++--------------+--------------+---------------+---------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT TYPE 'BOOK TYPE',PUB_ID 'PUBLISHER ID',ROUND(AVG(PRICE),2 )'Average price',SUM(YTD_SALES )'QTY OF SALES ' FROM TITLES GROUP BY TYPE,PUB_ID WITH ROLLUP;
++--------------+--------------+---------------+---------------+
+| BOOK TYPE    | PUBLISHER ID | Average price | QTY OF SALES  |
++--------------+--------------+---------------+---------------+
+| business     | 0736         |          2.99 |         18722 |
+| business     | 1389         |         17.31 |         12066 |
+| business     | NULL         |         13.73 |         30788 |
+| mod_cook     | 0877         |         11.49 |         24278 |
+| mod_cook     | NULL         |         11.49 |         24278 |
+| popular_comp | 1389         |         21.48 |         12875 |
+| popular_comp | NULL         |         21.48 |         12875 |
+| psychology   | 0736         |         11.48 |          9564 |
+| psychology   | 0877         |         21.59 |           375 |
+| psychology   | NULL         |         13.50 |          9939 |
+| trad_cook    | 0877         |         15.96 |         19566 |
+| trad_cook    | NULL         |         15.96 |         19566 |
+| UNDECIDED    | 0877         |          NULL |          NULL |
+| UNDECIDED    | NULL         |          NULL |          NULL |
+| NULL         | NULL         |         14.77 |         97446 |
++--------------+--------------+---------------+---------------+
+15 rows in set (0.00 sec)
+
+mysql> SELECT TYPE 'BOOK TYPE',PUB_ID 'PUBLISHER ID',AVG(PRICE) 'Average price',SUM(YTD_SALES )'QTY OF SALES ' FROM TITLES GROUP BY TYPE,PUB_ID WITH ROLLUP HAVING SUM(YTD_SALES) IS NOT NULL;
++--------------+--------------+---------------+---------------+
+| BOOK TYPE    | PUBLISHER ID | Average price | QTY OF SALES  |
++--------------+--------------+---------------+---------------+
+| business     | 0736         |    2.99000000 |         18722 |
+| business     | 1389         |   17.31000000 |         12066 |
+| business     | NULL         |   13.73000000 |         30788 |
+| mod_cook     | 0877         |   11.49000000 |         24278 |
+| mod_cook     | NULL         |   11.49000000 |         24278 |
+| popular_comp | 1389         |   21.47500000 |         12875 |
+| popular_comp | NULL         |   21.47500000 |         12875 |
+| psychology   | 0736         |   11.48250000 |          9564 |
+| psychology   | 0877         |   21.59000000 |           375 |
+| psychology   | NULL         |   13.50400000 |          9939 |
+| trad_cook    | 0877         |   15.96333333 |         19566 |
+| trad_cook    | NULL         |   15.96333333 |         19566 |
+| NULL         | NULL         |   14.76625000 |         97446 |
++--------------+--------------+---------------+---------------+
+13 rows in set (0.00 sec)
+
