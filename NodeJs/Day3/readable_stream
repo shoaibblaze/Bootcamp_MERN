@@ -1,0 +1,46 @@
+const { read } = require("fs");
+const fs=require('fs')
+var data=''
+var chunk;
+const readerStream=fs.createReadStream('./assets/file1.txt');
+readerStream.setEncoding('utf-8');
+
+readerStream.on('readable',function(){
+    while((chunk=readerStream.read(1))!=null){
+        data+=chunk;
+        // console.log(chunk);
+    }
+
+
+})
+// function countVowel(str){
+//     const count=str.match(/[aeiou]/gi).length;
+//     return count;
+// }
+
+
+const countAlpha = str => {
+   return str.split('').reduce((acc, val) => {
+      const legend = 'aeiou';
+      let { vowels, consonants } = acc;
+      if(val.toLowerCase() === val.toUpperCase()){
+         return acc;
+      };
+      if(legend.includes(val.toLowerCase())){
+         vowels++;
+      }else{
+         consonants++;
+      };
+      return { vowels, consonants };
+   }, {
+      vowels: 0,
+      consonants: 0
+   });
+};
+readerStream.on('end',()=>{
+    // console.log(data);
+    // const count=str.match(/[aeiou]/gi).lenth;
+    // const result=countVowel(data);
+    // console.log(result);
+    console.log(countAlpha(data));
+})

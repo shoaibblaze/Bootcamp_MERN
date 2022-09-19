@@ -1,0 +1,168 @@
+
+C:\Users\shoaib.s>node --version
+v16.17.0
+
+C:\Users\shoaib.s>npm --version
+8.15.0
+
+C:\Users\shoaib.s>node
+Welcome to Node.js v16.17.0.
+Type ".help" for more information.
+> console.log("Hello Node.Js!")
+Hello Node.Js!
+undefined
+> x=10
+10
+> y=20
+20
+> z=x+y
+30
+> var a=100
+undefined
+> var a =100
+undefined
+> a
+100
+
+> a>x
+true
+> y<a
+true
+
+>
+> .help
+.break    Sometimes you get stuck, this gets you out
+.clear    Alias for .break
+.editor   Enter editor mode
+.exit     Exit the REPL
+.help     Print this help message
+.load     Load JS from a file into the REPL session
+.save     Save all evaluated commands in this REPL session to a file
+
+Press Ctrl+C to abort current expression, Ctrl+D to exit the REPL
+> .exit
+
+C:\Users\shoaib.s>
+D:\Bootcamp_nodejs>node
+Welcome to Node.js v16.17.0.
+Type ".help" for more information.
+> .load Day_1.js
+function welcome(name){
+return `Hello $(name)`;
+}
+welcome('Vijay')
+function welcome(name){}
+\c
+
+function welcome(name){
+return `Hello ${name}`;
+}
+welcome('Vijay')
+> 21+22
+43
+> _+12
+55
+>
+
+global
+<ref *1> Object [global] {
+  global: [Circular *1],
+  clearInterval: [Function: clearInterval],
+  clearTimeout: [Function: clearTimeout],
+  setInterval: [Function: setInterval],
+  setTimeout: [Function: setTimeout] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  },
+  queueMicrotask: [Function: queueMicrotask],
+  performance: Performance {
+    nodeTiming: PerformanceNodeTiming {
+      name: 'node',
+      entryType: 'node',
+      startTime: 0,
+      duration: 288601.7351000011,
+      nodeStart: 1.2550000008195639,
+      v8Start: 17.684299999848008,
+      bootstrapComplete: 61.01649999991059,
+      environment: 42.54910000041127,
+      loopStart: 97.86920000053942,
+      loopExit: -1,
+      idleTime: 288163.4622
+    },
+    timeOrigin: 1662369630021.805
+  },
+  clearImmediate: [Function: clearImmediate],
+  setImmediate: [Function: setImmediate] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  }
+}
+
+D:\Bootcamp_nodejs>node repl.js
+$
+D:\Bootcamp_nodejs>node repl.js
+$ Exaple:CLI
+0:C:\Program Files\nodejs\node.exe
+1:D:\Bootcamp_nodejs\repl.js
+
+ console
+Object [console] {
+  log: [Function: log],
+  warn: [Function: warn],
+  dir: [Function: dir],
+  time: [Function: time],
+  timeEnd: [Function: timeEnd],
+  timeLog: [Function: timeLog],
+  trace: [Function: trace],
+  assert: [Function: assert],
+  clear: [Function: clear],
+  count: [Function: count],
+  countReset: [Function: countReset],
+  group: [Function: group],
+  groupEnd: [Function: groupEnd],
+  table: [Function: table],
+  debug: [Function: debug],
+  info: [Function: info],
+  dirxml: [Function: dirxml],
+  error: [Function: error],
+  groupCollapsed: [Function: groupCollapsed],
+  Console: [Function: Console],
+  profile: [Function: profile],
+  profileEnd: [Function: profileEnd],
+  timeStamp: [Function: timeStamp],
+  context: [Function: context]
+}
+
+D:\Bootcamp_nodejs>node repl.js
+console methods
+format specifiers
+I have 2 hands
+the number is: 20
+
+D:\Bootcamp_nodejs>node repl.js
+orange: 1
+orange: 2
+orange: 3
+peach: 1
+just one apple: 1
+
+D:\Bootcamp_nodejs>
+node repl.js
+Trace
+    at f2 (D:\Bootcamp_nodejs\repl.js:25:25)
+    at f1 (D:\Bootcamp_nodejs\repl.js:26:17)
+    at Object.<anonymous> (D:\Bootcamp_nodejs\repl.js:27:1)
+    at Module._compile (node:internal/modules/cjs/loader:1126:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)
+    at Module.load (node:internal/modules/cjs/loader:1004:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:839:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)
+    at node:internal/main/run_main_module:17:47
+
+node repl.js
+Testing..
+doSomething(): 5.6ms
+
+D:\Bootcamp_nodejs>node repl.js
+ Time spent....
+ Time spent....
+ Time spent....
+ Time spent....
