@@ -1,0 +1,22 @@
+const nums=[1,2,3,4,5]
+ans=nums.map((num)=>{
+result=num*num;
+return result;
+console.log(result);
+})
+
+
+
+
+[ 1, 4, 9, 16, 25 ]
+
+
+const names=["alice","bob","charlie","danielle"]
+anse=names.map((name)=>{
+result=name[0].toUpperCase()+name.slice(1)
+return result
+console.log(result);
+})
+
+[ 'Alice', 'Bob', 'Charlie', 'Danielle' ]
+>
